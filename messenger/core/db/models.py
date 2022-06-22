@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -29,3 +29,23 @@ class UserChat(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     chat_id = Column(Integer, ForeignKey('chats.id'))
+
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    chat_id = Column(Integer, ForeignKey('chats.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))
+    message_text = Column(String)
+    sending_datetime = Column(DateTime, server_default=func.now())
+
+
+class UserMessage(Base):
+    __tablename__ = "users_messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    message_id = Column(Integer, ForeignKey('messages.id'))
+    status = Column(String)
+    is_changed = Column(Boolean)
